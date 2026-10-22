@@ -1,0 +1,6 @@
+{
+ "routes":[
+  {"path":"/","label":"Dashboard"},{"path":"/accounts","label":"Accounts"},{"path":"/assets","label":"Assets"},{"path":"/pipeline","label":"Pipeline"},
+  {"path":"/quotes","label":"Quotes","status":"planned"},{"path":"/rentals","label":"Rentals","status":"planned"},{"path":"/service","label":"Service","status":"planned"},{"path":"/parts","label":"Parts","status":"planned"},{"path":"/settings","label":"Settings","status":"planned"}
+ ]
+}
