@@ -63,7 +63,7 @@ ALTER TABLE public.opportunities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activities ENABLE ROW LEVEL SECURITY;
 
 CREATE SCHEMA IF NOT EXISTS private;
-CREATE OR REPLACE FUNCTION private.current_user_role() RETURNS public.user_role LANGUAGE sql SECURITY DEFINER STABLE SET search_path='' AS $$ SELECT p.role FROM public.profiles p WHERE p.id=(select auth.uid()); $$;
+CREATE OR REPLACE FUNCTION private.current_user_role() RETURNS public.user_role LANGUAGE sql SECURITY DEFINER STABLE SET search_path='' AS $$ SELECT p.role FROM public.profiles p WHERE p.id=(select auth.uid()) AND p.is_active=true; $;
 REVOKE ALL ON FUNCTION private.current_user_role() FROM PUBLIC,anon;
 GRANT USAGE ON SCHEMA private TO authenticated;
 GRANT EXECUTE ON FUNCTION private.current_user_role() TO authenticated;
@@ -88,13 +88,13 @@ CREATE POLICY contacts_select ON public.contacts FOR SELECT TO authenticated USI
 CREATE POLICY contacts_write ON public.contacts FOR ALL TO authenticated USING(EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=contacts.account_id AND (private.current_user_role()='admin' OR a.owner_id=(select auth.uid())))) WITH CHECK(EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=contacts.account_id AND (private.current_user_role()='admin' OR a.owner_id=(select auth.uid()))));
 CREATE POLICY sites_select ON public.sites FOR SELECT TO authenticated USING(EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=sites.account_id AND (private.current_user_role()='admin' OR a.owner_id=(select auth.uid()) OR private.current_user_role() IN ('service','parts','operations'))));
 CREATE POLICY sites_write ON public.sites FOR ALL TO authenticated USING(EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=sites.account_id AND (private.current_user_role()='admin' OR a.owner_id=(select auth.uid())))) WITH CHECK(EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=sites.account_id AND (private.current_user_role()='admin' OR a.owner_id=(select auth.uid()))));
-CREATE POLICY assets_select ON public.assets FOR SELECT TO authenticated USING((select auth.uid()) IS NOT NULL);
+CREATE POLICY assets_select ON public.assets FOR SELECT TO authenticated USING(private.current_user_role() IS NOT NULL);
 CREATE POLICY assets_write ON public.assets FOR ALL TO authenticated USING(private.current_user_role() IN ('admin','operations','sales')) WITH CHECK(private.current_user_role() IN ('admin','operations','sales'));
 CREATE POLICY opportunities_select ON public.opportunities FOR SELECT TO authenticated USING(private.current_user_role()='admin' OR owner_id=(select auth.uid()) OR private.current_user_role() IN ('service','operations'));
 CREATE POLICY opportunities_insert ON public.opportunities FOR INSERT TO authenticated WITH CHECK(private.current_user_role() IN ('admin','sales') AND (owner_id=(select auth.uid()) OR private.current_user_role()='admin'));
 CREATE POLICY opportunities_update ON public.opportunities FOR UPDATE TO authenticated USING(private.current_user_role()='admin' OR owner_id=(select auth.uid())) WITH CHECK(private.current_user_role()='admin' OR owner_id=(select auth.uid()));
 CREATE POLICY opportunities_delete ON public.opportunities FOR DELETE TO authenticated USING(private.current_user_role()='admin');
-CREATE POLICY activities_select ON public.activities FOR SELECT TO authenticated USING(created_by=(select auth.uid()) OR (account_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=activities.account_id)) OR (opportunity_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.opportunities o WHERE o.id=activities.opportunity_id)) OR (asset_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.assets x WHERE x.id=activities.asset_id)));
+CREATE POLICY activities_select ON public.activities FOR SELECT TO authenticated USING(private.current_user_role() IS NOT NULL AND (created_by=(select auth.uid()) OR (account_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.accounts a WHERE a.id=activities.account_id)) OR (opportunity_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.opportunities o WHERE o.id=activities.opportunity_id)) OR (asset_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.assets x WHERE x.id=activities.asset_id))));
 CREATE POLICY activities_insert ON public.activities FOR INSERT TO authenticated WITH CHECK(created_by=(select auth.uid()) OR private.current_user_role()='admin');
 CREATE POLICY activities_update ON public.activities FOR UPDATE TO authenticated USING(created_by=(select auth.uid()) OR private.current_user_role()='admin') WITH CHECK(created_by=(select auth.uid()) OR private.current_user_role()='admin');
 
