@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base { * { @apply border-graphite-700; } body { @apply bg-graphite-950 text-paper-50 font-sans; } }
+@layer components {
+ .status-chip { @apply inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium border-l-2; }
+ .btn-primary { @apply bg-amber-500 hover:bg-amber-400 text-graphite-950 font-medium px-3 py-1.5 rounded text-sm transition-colors duration-fast; }
+ .btn-ghost { @apply bg-transparent hover:bg-graphite-800 text-paper-100 px-3 py-1.5 rounded text-sm transition-colors duration-fast; }
+ .panel { @apply bg-graphite-900 border border-graphite-700 rounded-lg; }
+ .input { @apply w-full bg-graphite-800 border border-graphite-600 rounded px-3 py-2 text-sm text-paper-50 placeholder:text-graphite-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30; }
+ .label { @apply block text-xs font-medium text-paper-200 mb-1; }
+}
