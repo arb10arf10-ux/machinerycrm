@@ -31,3 +31,6 @@ CREATE POLICY activities_select ON public.activities FOR SELECT TO authenticated
   OR (asset_id IS NOT NULL AND EXISTS(SELECT 1 FROM public.assets x WHERE x.id=activities.asset_id))
  )
 );
+
+-- Remove non-row-scoped table privileges that could bypass RLS or are unnecessary for the client.
+REVOKE TRUNCATE, REFERENCES, TRIGGER ON public.locations, public.accounts, public.contacts, public.sites, public.assets, public.opportunities, public.activities FROM authenticated;
