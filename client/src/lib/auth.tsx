@@ -31,15 +31,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) void fetchProfile(session.user.id)
-      else { setProfile(null); setLoading(false) }
+      if (session?.user) {
+        setProfile(null)
+        setLoading(true)
+        void fetchProfile(session.user.id)
+      } else {
+        setProfile(null)
+        setLoading(false)
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
 
   async function fetchProfile(userId: string) {
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()
-    if (!error && data) setProfile(data)
+    setProfile(!error && data ? data : null)
     setLoading(false)
   }
   async function signIn(email: string, password: string) {
