@@ -8,9 +8,9 @@ import { AssetsPage } from './features/assets/AssetsPage'
 import { PipelinePage } from './features/pipeline/PipelinePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  const { user, profile, loading } = useAuth()
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-graphite-950 text-graphite-500">Loading…</div>
-  if (!user) return <Navigate to="/login" replace />
+  if (!user || !profile || !profile.is_active) return <Navigate to="/login" replace />
   return <>{children}</>
 }
 
