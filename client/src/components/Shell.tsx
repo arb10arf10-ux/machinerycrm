@@ -1,0 +1,18 @@
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { LayoutDashboard, Building2, Truck, Kanban, FileText, Calendar, Wrench, Package, Settings, LogOut, Menu } from 'lucide-react'
+import { useAuth } from '../lib/auth'
+import { useState } from 'react'
+import clsx from 'clsx'
+const navItems = [
+ {to:'/',icon:LayoutDashboard,label:'Dashboard'},{to:'/accounts',icon:Building2,label:'Accounts'},{to:'/assets',icon:Truck,label:'Assets'},{to:'/pipeline',icon:Kanban,label:'Pipeline'},
+ {to:'/quotes',icon:FileText,label:'Quotes',disabled:true},{to:'/rentals',icon:Calendar,label:'Rentals',disabled:true},{to:'/service',icon:Wrench,label:'Service',disabled:true},{to:'/parts',icon:Package,label:'Parts',disabled:true},{to:'/settings',icon:Settings,label:'Settings'}
+]
+export function Shell(){
+ const {profile,signOut}=useAuth(); const navigate=useNavigate(); const [collapsed,setCollapsed]=useState(false)
+ async function handleSignOut(){await signOut();navigate('/login')}
+ return <div className="flex h-screen overflow-hidden"><aside className={clsx('flex flex-col bg-graphite-900 border-r border-graphite-700 transition-all duration-normal',collapsed?'w-16':'w-56')}>
+ <div className="flex items-center gap-2 px-4 h-14 border-b border-graphite-700"><div className="w-7 h-5 flex flex-col justify-between"><div className="h-1.5 bg-amber-500 rounded-sm w-full"/><div className="h-1.5 bg-amber-500 rounded-sm w-4/5 ml-auto"/></div>{!collapsed&&<span className="font-semibold text-sm tracking-tight text-paper-50">HM CRM</span>}<button onClick={()=>setCollapsed(!collapsed)} className="ml-auto p-1 rounded hover:bg-graphite-800 text-paper-200"><Menu size={16}/></button></div>
+ <nav className="flex-1 py-3 space-y-0.5 px-2">{navItems.map(({to,icon:Icon,label,disabled})=><NavLink key={to} to={to} end={to==='/'} className={({isActive})=>clsx('flex items-center gap-3 px-3 py-2 rounded text-sm transition-colors duration-fast',disabled&&'opacity-40 pointer-events-none',isActive?'bg-graphite-800 text-amber-400':'text-paper-200 hover:bg-graphite-800 hover:text-paper-50')}><Icon size={18} strokeWidth={1.75}/>{!collapsed&&<span>{label}</span>}</NavLink>)}</nav>
+ <div className="border-t border-graphite-700 p-3">{!collapsed&&profile&&<div className="mb-2 px-1"><div className="text-xs font-medium text-paper-50 truncate">{profile.full_name||profile.email}</div><div className="text-[10px] uppercase tracking-wider text-graphite-500">{profile.role}</div></div>}<button onClick={handleSignOut} className="flex items-center gap-2 w-full px-2 py-1.5 rounded text-sm text-paper-200 hover:bg-graphite-800 hover:text-paper-50"><LogOut size={16}/>{!collapsed&&<span>Sign out</span>}</button></div>
+ </aside><main className="flex-1 overflow-auto bg-graphite-950"><Outlet/></main></div>
+}
