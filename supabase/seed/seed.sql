@@ -1,0 +1,7 @@
+-- Optional development seed. Run only after the initial schema and a test user exist.
+-- Replace YOUR-USER-UUID with a real auth.users id before uncommenting.
+-- INSERT INTO public.accounts(name,account_type,owner_id,phone,billing_city,billing_state)
+-- VALUES ('Example Construction','prospect','YOUR-USER-UUID','+1-555-0100','Dallas','TX');
+-- INSERT INTO public.assets(serial_number,internal_id,make,model,year,category,status,location_id,hour_meter)
+-- SELECT 'CAT320-TEST-001','EQ-TEST-001','Caterpillar','320',2021,'excavator','available',id,1842.5
+-- FROM public.locations WHERE code='HQ';
