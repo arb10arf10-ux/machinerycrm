@@ -7,6 +7,7 @@ import { AccountsPage } from './features/accounts/AccountsPage'
 import { AssetsPage } from './features/assets/AssetsPage'
 import { PipelinePage } from './features/pipeline/PipelinePage'
 import { OrdersPage } from './features/orders/OrdersPage'
+import { SettingsPage } from './features/settings/SettingsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
@@ -29,7 +30,7 @@ function AppRoutes() {
         <Route path="rentals" element={<ComingSoon title="Rentals" />} />
         <Route path="service" element={<ComingSoon title="Service" />} />
         <Route path="parts" element={<ComingSoon title="Parts" />} />
-        <Route path="settings" element={<ComingSoon title="Settings" />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
