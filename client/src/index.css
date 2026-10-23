@@ -16,6 +16,9 @@ html[dir='rtl'] .left-3 { left: auto; right: .75rem; }
 html[dir='rtl'] input, html[dir='rtl'] textarea, html[dir='rtl'] select { text-align: right; }
 html[dir='rtl'] input[type='email'], html[dir='rtl'] input[type='password'], html[dir='rtl'] input[type='url'], html[dir='rtl'] input[type='number'], html[dir='rtl'] input[type='date'] { direction: ltr; text-align: left; }
 html[dir='rtl'] table { direction: rtl; }
+html[dir='rtl'] nav a { flex-direction: row-reverse; }
+html[dir='rtl'] .fixed.inset-0.flex.justify-end { justify-content: flex-start; }
+html[dir='rtl'] .fixed.inset-0 .border-l { border-left-width: 0; border-right-width: 1px; }
 html[dir='rtl'] .space-x-2 > :not([hidden]) ~ :not([hidden]) { --tw-space-x-reverse: 1; }
 
 @layer base { * { @apply border-graphite-700; } body { @apply bg-graphite-950 text-paper-50 font-sans; } }
