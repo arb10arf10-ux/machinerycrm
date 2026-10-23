@@ -1,6 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Arabic-friendly bidirectional layout and form alignment */
+html[dir='rtl'] body { text-align: right; }
+html[dir='rtl'] .text-left { text-align: right; }
+html[dir='rtl'] .text-right { text-align: left; }
+html[dir='rtl'] .border-l { border-left-width: 0; border-right-width: 1px; }
+html[dir='rtl'] .border-r { border-right-width: 0; border-left-width: 1px; }
+html[dir='rtl'] .ml-auto { margin-left: 0; margin-right: auto; }
+html[dir='rtl'] .mr-auto { margin-right: 0; margin-left: auto; }
+html[dir='rtl'] .ml-2 { margin-left: 0; margin-right: .5rem; }
+html[dir='rtl'] .pl-9 { padding-left: .75rem; padding-right: 2.25rem; }
+html[dir='rtl'] .left-3 { left: auto; right: .75rem; }
+html[dir='rtl'] input, html[dir='rtl'] textarea, html[dir='rtl'] select { text-align: right; }
+html[dir='rtl'] input[type='email'], html[dir='rtl'] input[type='password'], html[dir='rtl'] input[type='url'], html[dir='rtl'] input[type='number'], html[dir='rtl'] input[type='date'] { direction: ltr; text-align: left; }
+html[dir='rtl'] table { direction: rtl; }
+html[dir='rtl'] .space-x-2 > :not([hidden]) ~ :not([hidden]) { --tw-space-x-reverse: 1; }
+
 @layer base { * { @apply border-graphite-700; } body { @apply bg-graphite-950 text-paper-50 font-sans; } }
 @layer components {
  .status-chip { @apply inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium border-l-2; }
