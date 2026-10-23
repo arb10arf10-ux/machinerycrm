@@ -111,7 +111,7 @@ export function OrdersPage() {
   if(!Number.isFinite(amount)||amount<=0){setError('Enter a payment amount greater than zero.');return}
   if(amount>remaining(selected)+0.005){setError('Payment cannot exceed the remaining balance.');return}
   setSaving(true)
-  const {error:e}=await supabase.from('order_payments').insert({order_id:selected.id,amount,notes:paymentNote.trim()||null,recorded_by:profile.id})
+  const {error:paymentError}=await supabase.from('order_payments').insert({order_id:selected.id,amount,notes:paymentNote.trim()||null,recorded_by:profile.id})
   setSaving(false)
   if(e){setError(e.message);return}
   setMessage('Payment recorded.');setPaymentAmount('');setPaymentNote('');setSelected(null);await load()
