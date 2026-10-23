@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Building2, Users, UserPlus, Plus, RefreshCw, Save, X, ShieldCheck, BriefcaseBusiness } from 'lucide-react'
+import { Building2, Users, UserPlus, Plus, RefreshCw, Save, ShieldCheck, BriefcaseBusiness } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import type { Tables } from '../../../../shared/database.types'
