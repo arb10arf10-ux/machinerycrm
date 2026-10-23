@@ -6,6 +6,7 @@ import { DashboardPage } from './features/dashboard/DashboardPage'
 import { AccountsPage } from './features/accounts/AccountsPage'
 import { AssetsPage } from './features/assets/AssetsPage'
 import { PipelinePage } from './features/pipeline/PipelinePage'
+import { OrdersPage } from './features/orders/OrdersPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
@@ -20,6 +21,7 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<ProtectedRoute><Shell /></ProtectedRoute>}>
         <Route index element={<DashboardPage />} />
+        <Route path="orders" element={<OrdersPage />} />
         <Route path="accounts" element={<AccountsPage />} />
         <Route path="assets" element={<AssetsPage />} />
         <Route path="pipeline" element={<PipelinePage />} />
