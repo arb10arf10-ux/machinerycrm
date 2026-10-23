@@ -8,6 +8,7 @@ import { AssetsPage } from './features/assets/AssetsPage'
 import { PipelinePage } from './features/pipeline/PipelinePage'
 import { OrdersPage } from './features/orders/OrdersPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { I18nProvider } from './lib/i18n'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth()
@@ -42,5 +43,5 @@ function ComingSoon({ title }: { title: string }) {
 }
 
 export default function App() {
-  return <AuthProvider><AppRoutes /></AuthProvider>
+  return <I18nProvider><AuthProvider><AppRoutes /></AuthProvider></I18nProvider>
 }
