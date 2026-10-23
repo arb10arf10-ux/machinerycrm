@@ -95,7 +95,7 @@ export function OrdersPage() {
    setMessage('Order created successfully.')
    setAccountId('');setNewClient(false);setClientName('');setClientPhone('');setProcess('sale');setStatus('pending');setTotal('');setInitialPaid('0');setNotes('');setExpectedDate('');setRentalStart('');setRentalEnd('')
    await load();setTab('all')
-  } catch (e) {setError(e instanceof Error?e.message:'Could not create order. Check your permissions and try again.')}
+  } catch (caught) {setError(caught instanceof Error?caught.message:'Could not create order. Check your permissions and try again.')}
   finally {setSaving(false)}
  }
  async function updateStatus(order:Order,next:Order['status']) {
