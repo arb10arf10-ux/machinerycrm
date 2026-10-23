@@ -115,7 +115,7 @@ export function OrdersPage() {
   setSaving(true)
   const {error:paymentError}=await supabase.from('order_payments').insert({order_id:selected.id,amount,notes:paymentNote.trim()||null,recorded_by:profile.id})
   setSaving(false)
-  if(e){setError(e.message);return}
+  if(paymentError){setError(paymentError.message);return}
   setMessage('Payment recorded.');setPaymentAmount('');setPaymentNote('');setSelected(null);await load()
  }
 
