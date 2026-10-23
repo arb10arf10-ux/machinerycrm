@@ -223,6 +223,11 @@ const translations: Record<string,string> = {
 "Status for order": "حالة الطلب",
 "Switch to Arabic": "التبديل إلى العربية",
 "Toggle menu": "تبديل القائمة"
+,
+"Admin": "مسؤول",
+"Sales": "المبيعات",
+"Operations": "العمليات",
+"Viewer": "مشاهدة فقط"
 }
 type I18n = { language: Language; setLanguage: (language: Language) => void; t: (text: string) => string }
 const Context = createContext<I18n>({ language:'en', setLanguage:()=>{}, t:(text)=>text })
