@@ -97,7 +97,7 @@ export function SettingsPage(){
   setNotice(t('Branch added.'));setBranchCode('');setBranchName('');setBranchCity('');await load()
  }
  async function toggleBranch(branch:Location){
-  if(!window.confirm(`${branch.is_active?'Deactivate':'Reactivate'} branch ${branch.name}?`))return
+  if(!window.confirm(`${branch.is_active?t('Deactivate'):t('Reactivate')} ${t('Branch').toLowerCase()} ${branch.name}?`))return
   resetMessages()
   const {error:e}=await supabase.from('locations').update({is_active:!branch.is_active}).eq('id',branch.id)
   if(e){setError(e.message);return}
@@ -113,7 +113,7 @@ export function SettingsPage(){
   setNotice(t('Account added.'));setAccountName('');setAccountPhone('');setAccountEmail('');setAccountType('customer');await load()
  }
  async function toggleAccount(account:Account){
-  if(!window.confirm(`${account.is_active?'Deactivate':'Reactivate'} account ${account.name}?`))return
+  if(!window.confirm(`${account.is_active?t('Deactivate'):t('Reactivate')} ${t('Account').toLowerCase()} ${account.name}?`))return
   resetMessages()
   const {error:e}=await supabase.from('accounts').update({is_active:!account.is_active}).eq('id',account.id)
   if(e){setError(e.message);return}
