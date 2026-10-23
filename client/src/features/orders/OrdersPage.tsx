@@ -73,8 +73,8 @@ export function OrdersPage() {
  const remaining = (o:Order) => Math.max(0,totalAmount(o)-paidAmount(o))
  const paymentStatus = (o:Order) => paidAmount(o)<=0?'Unpaid':paidAmount(o)+0.005>=totalAmount(o)?'Paid':'Partially paid'
 
- async function createOrder(e:React.FormEvent) {
-  e.preventDefault(); setError('');setMessage('')
+ async function createOrder(ev:React.FormEvent) {
+  ev.preventDefault(); setError('');setMessage('')
   if (!profile || !branchId || (!newClient&&!accountId) || (newClient&&!clientName.trim())) {setError('Choose a branch and client, or enter a new client name.');return}
   const totalValue=Number(total),paidValue=Number(initialPaid||0)
   if (!Number.isFinite(totalValue)||totalValue<0||!Number.isFinite(paidValue)||paidValue<0||paidValue>totalValue) {setError('Amounts must be valid, and the initial payment cannot exceed the total.');return}
