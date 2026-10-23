@@ -9,6 +9,8 @@ type Site = { id:string; account_id:string; name:string; address_line1:string|nu
 type Asset = { id:string; serial_number:string; internal_id:string|null; make:string|null; model:string|null; year:number|null; category:string|null; status:'available'|'rented'|'sold'|'in_service'|'reserved'|'retired'|'in_transit'; location_id:string|null; current_account_id:string|null; hour_meter:number|null; purchase_date:string|null; purchase_cost:number|null; notes:string|null; is_active:boolean; created_at:string; updated_at:string }
 type Opportunity = { id:string; name:string; account_id:string; owner_id:string|null; stage:'lead'|'qualified'|'proposal'|'negotiation'|'won'|'lost'; opportunity_type:'sale'|'rental'|'service'|'parts'; amount:number|null; probability:number|null; expected_close_date:string|null; asset_id:string|null; description:string|null; lost_reason:string|null; created_at:string; updated_at:string }
 type Activity = { id:string; activity_type:'note'|'call'|'email'|'meeting'|'task'|'status_change'|'system'; subject:string|null; body:string|null; account_id:string|null; opportunity_id:string|null; asset_id:string|null; created_by:string|null; due_at:string|null; completed_at:string|null; created_at:string }
+type Order = { id:string; order_number:number; branch_id:string; account_id:string; created_by:string; process:'sale'|'rental'|'service'|'parts'|'other'; status:'pending'|'in_progress'|'fulfilled'|'cancelled'; total_amount:number; notes:string|null; expected_completion_date:string|null; rental_start_date:string|null; rental_end_date:string|null; created_at:string; updated_at:string }
+type OrderPayment = { id:string; order_id:string; amount:number; paid_at:string; notes:string|null; recorded_by:string; created_at:string }
 export type Database = {
  public: {
   Tables: {
@@ -20,6 +22,8 @@ export type Database = {
    assets: Table<Asset, {serial_number:string;internal_id?:string|null;make?:string|null;model?:string|null;year?:number|null;category?:string|null;status?:Asset['status'];location_id?:string|null;current_account_id?:string|null;hour_meter?:number|null;purchase_date?:string|null;purchase_cost?:number|null;notes?:string|null;is_active?:boolean}>
    opportunities: Table<Opportunity, {name:string;account_id:string;owner_id?:string|null;stage?:Opportunity['stage'];opportunity_type?:Opportunity['opportunity_type'];amount?:number|null;probability?:number|null;expected_close_date?:string|null;asset_id?:string|null;description?:string|null;lost_reason?:string|null}>
    activities: Table<Activity, {activity_type?:Activity['activity_type'];subject?:string|null;body?:string|null;account_id?:string|null;opportunity_id?:string|null;asset_id?:string|null;created_by?:string|null;due_at?:string|null;completed_at?:string|null}>
+   orders: Table<Order, {branch_id:string;account_id:string;created_by?:string;process?:Order['process'];status?:Order['status'];total_amount?:number;notes?:string|null;expected_completion_date?:string|null;rental_start_date?:string|null;rental_end_date?:string|null}>
+   order_payments: Table<OrderPayment, {order_id:string;amount:number;paid_at?:string;notes?:string|null;recorded_by?:string}>
   }
   Views: Record<string, never>
   Functions: Record<string, never>
