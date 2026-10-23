@@ -12,7 +12,7 @@ type Tab = 'new' | 'all' | 'pending'
 const orderStatuses: Order['status'][] = ['pending','in_progress','fulfilled','cancelled']
 const processes: Order['process'][] = ['sale','rental','service','parts','other']
 const money = (value:number) => new Intl.NumberFormat(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}).format(value)
-const titleCase = (value:string) => value.replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase())
+const titleCase = (value:string) => value.replace(/_/g,' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
 export function OrdersPage() {
  const { profile } = useAuth()
