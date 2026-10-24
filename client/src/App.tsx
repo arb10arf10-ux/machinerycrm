@@ -9,6 +9,7 @@ import { PipelinePage } from './features/pipeline/PipelinePage'
 import { OrdersPage } from './features/orders/OrdersPage'
 import { SettingsPage } from './features/settings/SettingsPage'
 import { CatalogPage } from './features/catalog/CatalogPage'
+import { BranchAccessPage } from './features/settings/BranchAccessPage'
 import { I18nProvider } from './lib/i18n'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="service" element={<ComingSoon title="Service" />} />
         <Route path="parts" element={<CatalogPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="settings/access" element={<BranchAccessPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
