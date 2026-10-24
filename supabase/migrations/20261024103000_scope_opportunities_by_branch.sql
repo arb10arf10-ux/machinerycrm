@@ -2,7 +2,7 @@
 DROP POLICY IF EXISTS opportunities_select ON public.opportunities;
 CREATE POLICY opportunities_select ON public.opportunities FOR SELECT TO authenticated
 USING (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR owner_id = (SELECT auth.uid())
   OR EXISTS (
     SELECT 1 FROM public.profiles p
@@ -14,10 +14,10 @@ USING (
 DROP POLICY IF EXISTS opportunities_insert ON public.opportunities;
 CREATE POLICY opportunities_insert ON public.opportunities FOR INSERT TO authenticated
 WITH CHECK (
-  public.current_user_role() IN ('admin','sales')
-  AND (owner_id = (SELECT auth.uid()) OR public.current_user_role() = 'admin')
+  private.current_user_role() IN ('admin','sales')
+  AND (owner_id = (SELECT auth.uid()) OR private.current_user_role() = 'admin')
   AND (
-    public.current_user_role() = 'admin'
+    private.current_user_role() = 'admin'
     OR EXISTS (
       SELECT 1 FROM public.profiles p
       WHERE p.id = (SELECT auth.uid())
@@ -29,7 +29,7 @@ WITH CHECK (
 DROP POLICY IF EXISTS opportunities_update ON public.opportunities;
 CREATE POLICY opportunities_update ON public.opportunities FOR UPDATE TO authenticated
 USING (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR owner_id = (SELECT auth.uid())
   OR EXISTS (
     SELECT 1 FROM public.profiles p
@@ -38,7 +38,7 @@ USING (
   )
 )
 WITH CHECK (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR owner_id = (SELECT auth.uid())
   OR EXISTS (
     SELECT 1 FROM public.profiles p
