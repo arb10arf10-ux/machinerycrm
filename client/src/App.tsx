@@ -8,6 +8,7 @@ import { AssetsPage } from './features/assets/AssetsPage'
 import { PipelinePage } from './features/pipeline/PipelinePage'
 import { OrdersPage } from './features/orders/OrdersPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { CatalogPage } from './features/catalog/CatalogPage'
 import { I18nProvider } from './lib/i18n'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -26,11 +27,12 @@ function AppRoutes() {
         <Route path="orders" element={<OrdersPage />} />
         <Route path="accounts" element={<AccountsPage />} />
         <Route path="assets" element={<AssetsPage />} />
+        <Route path="catalog" element={<CatalogPage />} />
         <Route path="pipeline" element={<PipelinePage />} />
         <Route path="quotes" element={<ComingSoon title="Quotes" />} />
         <Route path="rentals" element={<ComingSoon title="Rentals" />} />
         <Route path="service" element={<ComingSoon title="Service" />} />
-        <Route path="parts" element={<ComingSoon title="Parts" />} />
+        <Route path="parts" element={<CatalogPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
