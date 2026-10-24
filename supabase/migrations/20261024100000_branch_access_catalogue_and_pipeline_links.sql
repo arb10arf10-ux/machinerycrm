@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION public.guard_profile_branch_access()
 RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER SET search_path='' AS $$
 BEGIN
   IF (NEW.branch_id IS DISTINCT FROM OLD.branch_id OR NEW.can_view_all_branches IS DISTINCT FROM OLD.can_view_all_branches)
-     AND public.current_user_role() <> 'admin' THEN
+     AND private.current_user_role() <> 'admin' THEN
     RAISE EXCEPTION 'Only an administrator can change branch access';
   END IF;
   RETURN NEW;
@@ -33,7 +33,7 @@ GRANT UPDATE(branch_id, can_view_all_branches) ON public.profiles TO authenticat
 DROP POLICY IF EXISTS orders_select ON public.orders;
 CREATE POLICY orders_select ON public.orders FOR SELECT TO authenticated
 USING (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR EXISTS (
     SELECT 1 FROM public.profiles p
     WHERE p.id = (SELECT auth.uid())
@@ -45,10 +45,10 @@ USING (
 DROP POLICY IF EXISTS orders_insert ON public.orders;
 CREATE POLICY orders_insert ON public.orders FOR INSERT TO authenticated
 WITH CHECK (
-  public.current_user_role() IN ('admin','sales','operations')
+  private.current_user_role() IN ('admin','sales','operations')
   AND created_by = (SELECT auth.uid())
   AND (
-    public.current_user_role() = 'admin'
+    private.current_user_role() = 'admin'
     OR EXISTS (
       SELECT 1 FROM public.profiles p
       WHERE p.id = (SELECT auth.uid())
@@ -59,9 +59,9 @@ WITH CHECK (
 DROP POLICY IF EXISTS orders_update ON public.orders;
 CREATE POLICY orders_update ON public.orders FOR UPDATE TO authenticated
 USING (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR (
-    public.current_user_role() IN ('sales','operations')
+    private.current_user_role() IN ('sales','operations')
     AND EXISTS (
       SELECT 1 FROM public.profiles p
       WHERE p.id = (SELECT auth.uid())
@@ -70,9 +70,9 @@ USING (
   )
 )
 WITH CHECK (
-  public.current_user_role() = 'admin'
+  private.current_user_role() = 'admin'
   OR (
-    public.current_user_role() IN ('sales','operations')
+    private.current_user_role() IN ('sales','operations')
     AND EXISTS (
       SELECT 1 FROM public.profiles p
       WHERE p.id = (SELECT auth.uid())
@@ -82,7 +82,7 @@ WITH CHECK (
 );
 DROP POLICY IF EXISTS orders_delete ON public.orders;
 CREATE POLICY orders_delete ON public.orders FOR DELETE TO authenticated
-USING (public.current_user_role() = 'admin');
+USING (private.current_user_role() = 'admin');
 
 -- Categories and catalogue items use separate tables so machine and part codes never collide.
 CREATE TABLE IF NOT EXISTS public.catalog_categories (
@@ -120,9 +120,9 @@ CREATE TRIGGER catalog_items_updated_at BEFORE UPDATE ON public.catalog_items FO
 
 ALTER TABLE public.catalog_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.catalog_items ENABLE ROW LEVEL SECURITY;
-CREATE POLICY catalog_categories_read ON public.catalog_categories FOR SELECT TO authenticated USING (public.current_user_role() IS NOT NULL);
-CREATE POLICY catalog_categories_admin_write ON public.catalog_categories FOR ALL TO authenticated USING (public.current_user_role() = 'admin') WITH CHECK (public.current_user_role() = 'admin');
-CREATE POLICY catalog_items_read ON public.catalog_items FOR SELECT TO authenticated USING (public.current_user_role() IS NOT NULL);
-CREATE POLICY catalog_items_write ON public.catalog_items FOR ALL TO authenticated USING (public.current_user_role() IN ('admin','operations','parts')) WITH CHECK (public.current_user_role() IN ('admin','operations','parts'));
+CREATE POLICY catalog_categories_read ON public.catalog_categories FOR SELECT TO authenticated USING (private.current_user_role() IS NOT NULL);
+CREATE POLICY catalog_categories_admin_write ON public.catalog_categories FOR ALL TO authenticated USING (private.current_user_role() = 'admin') WITH CHECK (private.current_user_role() = 'admin');
+CREATE POLICY catalog_items_read ON public.catalog_items FOR SELECT TO authenticated USING (private.current_user_role() IS NOT NULL);
+CREATE POLICY catalog_items_write ON public.catalog_items FOR ALL TO authenticated USING (private.current_user_role() IN ('admin','operations','parts')) WITH CHECK (private.current_user_role() IN ('admin','operations','parts'));
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.catalog_categories, public.catalog_items TO authenticated;
 REVOKE ALL ON public.catalog_categories, public.catalog_items FROM anon;
