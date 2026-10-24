@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "desktop:dev": "concurrently -k \"npm:dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "desktop:dist": "npm run build && electron-builder --win nsis"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
@@ -26,6 +28,39 @@
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
+    "concurrently": "^9.1.2",
+    "wait-on": "^8.0.3"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.machinerycrm.desktop",
+    "productName": "Machinery CRM",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
