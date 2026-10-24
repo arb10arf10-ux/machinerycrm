@@ -5,7 +5,7 @@ import { useState } from 'react'
 import clsx from 'clsx'
 import { useI18n } from '../lib/i18n'
 const navItems = [
- {to:'/',icon:LayoutDashboard,label:'Dashboard'}, {to:'/orders',icon:ClipboardList,label:'Order Reports'}, {to:'/accounts',icon:Building2,label:'Accounts'}, {to:'/assets',icon:Truck,label:'Assets'}, {to:'/pipeline',icon:Kanban,label:'Pipeline'}, {to:'/quotes',icon:FileText,label:'Quotes',disabled:true}, {to:'/rentals',icon:Calendar,label:'Rentals',disabled:true}, {to:'/service',icon:Wrench,label:'Service',disabled:true}, {to:'/parts',icon:Package,label:'Parts',disabled:true}, {to:'/settings',icon:Settings,label:'Settings'}
+ {to:'/',icon:LayoutDashboard,label:'Dashboard'}, {to:'/orders',icon:ClipboardList,label:'Order Reports'}, {to:'/accounts',icon:Building2,label:'Accounts'}, {to:'/assets',icon:Truck,label:'Assets'}, {to:'/pipeline',icon:Kanban,label:'Pipeline'}, {to:'/quotes',icon:FileText,label:'Quotes',disabled:true}, {to:'/rentals',icon:Calendar,label:'Rentals',disabled:true}, {to:'/service',icon:Wrench,label:'Service',disabled:true}, {to:'/parts',icon:Package,label:'Machines & Parts'}, {to:'/settings',icon:Settings,label:'Settings'}
 ]
 export function Shell(){
  const {profile,signOut}=useAuth(); const navigate=useNavigate(); const [collapsed,setCollapsed]=useState(false); const {language,setLanguage,t}=useI18n()
