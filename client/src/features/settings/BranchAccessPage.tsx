@@ -1,0 +1,23 @@
+import { useEffect, useState } from 'react'
+import { RefreshCw, ShieldCheck } from 'lucide-react'
+import { supabase } from '../../lib/supabase'
+import { useAuth } from '../../lib/auth'
+import { useI18n } from '../../lib/i18n'
+import type { Tables } from '../../../../shared/database.types'
+type Employee = Tables<'profiles'>
+type Branch = Tables<'locations'>
+export function BranchAccessPage() {
+ const {t}=useI18n(); const {profile}=useAuth()
+ const [employees,setEmployees]=useState<Employee[]>([]);const [branches,setBranches]=useState<Branch[]>([])
+ const [branchValues,setBranchValues]=useState<Record<string,string>>({});const [allValues,setAllValues]=useState<Record<string,boolean>>({})
+ const [loading,setLoading]=useState(true);const [saving,setSaving]=useState(false);const [error,setError]=useState('');const [notice,setNotice]=useState('')
+ async function load(){setLoading(true);setError('');const [p,b]=await Promise.all([supabase.from('profiles').select('*').order('full_name'),supabase.from('locations').select('*').eq('type','branch').eq('is_active',true).order('name')]);if(p.error||b.error)setError((p.error||b.error)?.message||'');setEmployees(p.data||[]);setBranches(b.data||[]);setBranchValues(Object.fromEntries((p.data||[]).map(x=>[x.id,x.branch_id||''])));setAllValues(Object.fromEntries((p.data||[]).map(x=>[x.id,x.can_view_all_branches])));setLoading(false)}
+ useEffect(()=>{void load()},[])
+ async function save(employee:Employee){setSaving(true);setError('');setNotice('');const {error:e}=await supabase.from('profiles').update({branch_id:branchValues[employee.id]||null,can_view_all_branches:allValues[employee.id]||false}).eq('id',employee.id);setSaving(false);if(e){setError(e.message);return}setNotice(t('Branch access saved for ')+ (employee.full_name||employee.email));void load()}
+ if(profile?.role!=='admin')return <div className="p-6"><h1 className="text-xl font-semibold">{t('Branch Access')}</h1><div className="panel p-5 mt-4">{t('This page is restricted to administrators.')}</div></div>
+ return <div className="p-5 md:p-6 max-w-[1500px] mx-auto space-y-5"><header className="flex flex-wrap justify-between items-center gap-3"><div><h1 className="text-xl font-semibold">{t('Branch Access')}</h1><p className="text-sm text-graphite-500 mt-1">{t('Assign each employee to one branch and explicitly grant cross-branch visibility only when needed.')}</p></div><button className="btn-ghost flex items-center gap-2" onClick={()=>void load()}><RefreshCw size={15}/>{t('Refresh')}</button></header>
+ <div className="panel p-4 flex gap-3"><ShieldCheck className="text-amber-400 shrink-0" size={20}/><p className="text-sm text-graphite-300">{t('Branch visibility is enforced by database policies. Employees without all-branch access can only read and work with orders in their assigned branch. Administrators can always see all branches.')}</p></div>
+ {notice&&<div className="rounded border border-emerald-800 bg-emerald-950/40 text-emerald-300 px-4 py-3 text-sm">{notice}</div>}{error&&<div className="rounded border border-red-800 bg-red-950/40 text-red-300 px-4 py-3 text-sm">{error}</div>}
+ <div className="panel overflow-x-auto"><table className="w-full text-sm min-w-[850px]"><thead><tr className="text-left text-xs uppercase text-graphite-500 border-b border-graphite-700"><th className="p-3">{t('Employee')}</th><th className="p-3">{t('Role')}</th><th className="p-3">{t('Assigned branch')}</th><th className="p-3">{t('Can view all branches')}</th><th className="p-3">{t('Action')}</th></tr></thead><tbody>{loading?<tr><td colSpan={5} className="p-6 text-center">{t('Loading…')}</td></tr>:employees.map(employee=><tr key={employee.id} className="border-b border-graphite-800"><td className="p-3"><div className="font-medium">{employee.full_name||t('Name not set')}</div><div className="text-xs text-graphite-500">{employee.email}</div></td><td className="p-3">{t(employee.role)}</td><td className="p-3"><select className="input py-1 min-w-44" value={branchValues[employee.id]||''} onChange={e=>setBranchValues(v=>({...v,[employee.id]:e.target.value}))}><option value="">{t('No branch assigned')}</option>{branches.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}</select></td><td className="p-3"><label className="flex items-center gap-2"><input type="checkbox" checked={allValues[employee.id]||false} onChange={e=>setAllValues(v=>({...v,[employee.id]:e.target.checked}))}/>{t('Cross-branch visibility')}</label></td><td className="p-3"><button className="btn-primary" disabled={saving} onClick={()=>void save(employee)}>{saving?t('Saving…'):t('Save access')}</button></td></tr>)}</tbody></table></div>
+ </div>
+}
