@@ -20,7 +20,7 @@ export function DashboardPage() {
    supabase.from('opportunities').select('amount,stage').not('stage','in','("won","lost")'),
    supabase.from('catalog_items').select('id').eq('is_active',true)
   ])
-  const orders=ordersRes.data||[];const payments=paymentsRes.data||[];const opps=oppsRes.data||[]
+  const orders=(ordersRes.data||[]) as unknown as Array<{id:string;order_number:number;status:string;total_amount:number;expected_completion_date:string|null;created_at:string;accounts:{name:string}|null}>;const payments=paymentsRes.data||[];const opps=oppsRes.data||[]
   const paid=payments.reduce<Record<string,number>>((acc,p)=>{acc[p.order_id]=(acc[p.order_id]||0)+Number(p.amount);return acc},{})
   const today=new Date().toISOString().slice(0,10)
   setStats({activeOrders:orders.filter(o=>['pending','in_progress'].includes(o.status)).length,overdueOrders:orders.filter(o=>o.expected_completion_date&&o.expected_completion_date<today&&!['fulfilled','cancelled'].includes(o.status)).length,outstanding:orders.reduce((sum,o)=>sum+Math.max(0,Number(o.total_amount||0)-(paid[o.id]||0)),0),opportunities:opps.length,pipelineValue:opps.reduce((sum,o)=>sum+Number(o.amount||0),0),items:itemsRes.data?.length||0,recent:orders.slice(0,6) as RecentOrder[]})
