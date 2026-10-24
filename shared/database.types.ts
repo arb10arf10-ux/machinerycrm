@@ -14,7 +14,7 @@ type OrderPayment = { id:string; order_id:string; amount:number; paid_at:string;
 export type Database = {
  public: {
   Tables: {
-   profiles: Table<Profile, {id:string;email:string;full_name?:string|null;role?:Profile['role'];avatar_url?:string|null;is_active?:boolean}>
+   profiles: Table<Profile, {id:string;email:string;full_name?:string|null;role?:Profile['role'];avatar_url?:string|null;is_active?:boolean;branch_id?:string|null;can_view_all_branches?:boolean}>
    locations: Table<Location, {code:string;name:string;type?:string;address_line1?:string|null;address_line2?:string|null;city?:string|null;state?:string|null;postal_code?:string|null;country?:string|null;is_active?:boolean}>
    accounts: Table<Account, {name:string;account_type?:Account['account_type'];owner_id?:string|null;billing_address_line1?:string|null;billing_city?:string|null;billing_state?:string|null;billing_postal_code?:string|null;billing_country?:string|null;phone?:string|null;website?:string|null;notes?:string|null;is_active?:boolean}>
    contacts: Table<Contact, {account_id:string;first_name:string;last_name?:string|null;email?:string|null;phone?:string|null;title?:string|null;is_primary?:boolean}>
