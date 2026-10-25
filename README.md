@@ -41,3 +41,14 @@ The Supabase project has been created in Central EU (Frankfurt). The initial sch
 - the role helper lives in a non-exposed schema.
 
 The schema and frontend still require integration testing before deployment.
+
+## Local-network / offline deployment
+
+The desktop shell is built with Tauri, while CRM data and authentication are provided by Supabase. For office-only operation, a compatible backend must run on a company server on the local network; building a desktop installer alone does not make the app offline.
+
+1. Follow `deploy/local/README.md` to prepare the local backend and apply all migrations.
+2. Copy `client/.env.example` to `client/.env.local` and set `VITE_SUPABASE_URL` to the local API URL (for example, `http://192.168.1.100:8000`) and `VITE_SUPABASE_ANON_KEY` to that backend's anon key.
+3. Build the desktop installer using `npm run desktop:dist` from `client/`.
+4. Install the same build on office PCs and test with the internet disconnected.
+
+The API URL is currently a build-time setting. When the server IP or domain changes, rebuild the frontend/installer with the new URL. Runtime editing of the endpoint and a complete self-hosted backend bootstrap are not implemented yet. Never put the service-role key in the frontend or installer.
